@@ -13,7 +13,7 @@ export async function updateUser(data) {
     where: { clerkUserId: userId },
   });
 
-  if (!user) throw new Error("User not found");
+ if (!user) throw new Error("User not found");
 
   try {
     // Start a transaction to handle both operations
@@ -75,7 +75,7 @@ export async function getUserOnboardingStatus() {
     where: { clerkUserId: userId },
   });
 
-  if (!user) throw new Error("User not found");
+  //if (!user) throw new Error("User not found");
 
   try {
     const user = await db.user.findUnique({

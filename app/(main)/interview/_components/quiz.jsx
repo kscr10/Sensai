@@ -20,7 +20,7 @@ import { BarLoader } from "react-spinners";
 export default function Quiz() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState([]);
-  const [showExplanation, setShowExplanation] = useState(false);
+  
 
   const {
     loading: generatingQuiz,
@@ -46,11 +46,17 @@ export default function Quiz() {
     newAnswers[currentQuestion] = answer;
     setAnswers(newAnswers);
   };
+ const clearAnswer = () => {
+  const newAnswers = [...answers];
+  newAnswers[currentQuestion] = null;
+  setAnswers(newAnswers);
+  //setShowExplanation(false); // optionally hide explanation if answer is cleared
+};
 
   const handleNext = () => {
     if (currentQuestion < quizData.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
-      setShowExplanation(false);
+     // setShowExplanation(false);
     } else {
       finishQuiz();
     }
@@ -142,36 +148,34 @@ export default function Quiz() {
           ))}
         </RadioGroup>
 
-        {showExplanation && (
-          <div className="mt-4 p-4 bg-muted rounded-lg">
-            <p className="font-medium">Explanation:</p>
-            <p className="text-muted-foreground">{question.explanation}</p>
-          </div>
-        )}
+      
       </CardContent>
-      <CardFooter className="flex justify-between">
-        {!showExplanation && (
-          <Button
-            onClick={() => setShowExplanation(true)}
-            variant="outline"
-            disabled={!answers[currentQuestion]}
-          >
-            Show Explanation
-          </Button>
-        )}
-        <Button
-          onClick={handleNext}
-          disabled={!answers[currentQuestion] || savingResult}
-          className="ml-auto"
-        >
-          {savingResult && (
-            <BarLoader className="mt-4" width={"100%"} color="gray" />
-          )}
-          {currentQuestion < quizData.length - 1
-            ? "Next Question"
-            : "Finish Quiz"}
-        </Button>
-      </CardFooter>
+      <CardFooter className="flex justify-between gap-2 flex-wrap">
+
+
+  {answers[currentQuestion] && (
+    <Button
+      onClick={clearAnswer}
+      variant="ghost"
+    >
+      Clear Answer
+    </Button>
+  )}
+
+  <Button
+    onClick={handleNext}
+    disabled={!answers[currentQuestion] || savingResult}
+    className="ml-auto"
+  >
+    {savingResult && (
+      <BarLoader className="mt-4" width={"100%"} color="gray" />
+    )}
+    {currentQuestion < quizData.length - 1
+      ? "Next Question"
+      : "Finish Quiz"}
+  </Button>
+</CardFooter>
+
     </Card>
   );
 }
